@@ -17,11 +17,66 @@ const WeatherApp = () => {
   let api_key = '9d3851d162229973640e5dd62d3581b5'
 
   const [wicon,setWicon] = useState(cloud_icon);
+  
 
-  const search = async () =>{
+  // const search = async () =>{
+  //   const element = document.getElementsByClassName("cityInput")
+  //   if(element[0].value === "")
+  //   {
+  //     return 0;
+  //   }
+  //   let url = `https://api.openweathermap.org/data/2.5/weather?q=${element[0].value}&units&appid=${api_key}`;
+
+  //   let response = await fetch(url);
+  //   let data = await response.json();
+
+  //   const humidity = document.getElementsByClassName("humidity-percentage");
+  //   const wind = document.getElementsByClassName("wind-rate");
+  //   const temperature = document.getElementsByClassName("weather-temp");
+  //   const location = document.getElementsByClassName("weather-location");
+
+  //   humidity[0].innerHTML = data.main.humidity + " %";
+  //   wind[0].innerHTML = Math.floor(data.wind.speed) + " km/hr";
+  //   temperature[0].innerHTML = Math.floor(data.main.temp) + "°C";
+  //   location[0].innerHTML = data.name;
+
+  //   if (data.weather[0].icon==="01d" || data.weather[0].icon==="01n")
+  //   {
+  //     setWicon(clear_icon);
+  //   }
+  //   else if (data.weather[0].icon === "02d" || data.weather[0].icon === "02n")
+  //   { 
+  //     setWicon(cloud_icon); 
+  //   }
+  //   else if (data.weather[0].icon === "03d" || data.weather[0].icon === "03n") 
+  //   { 
+  //     setWicon(drizzle_icon); 
+  //   }
+  //   else if (data.weather[0].icon === "04d" || data.weather[0].icon === "04n") 
+  //   { 
+  //     setWicon(drizzle_icon); 
+  //   }
+  //   else if (data.weather[0].icon === "09d" || data.weather[0].icon === "09n") 
+  //   { 
+  //     setWicon(rain_icon); 
+  //   }
+
+  //   else if (data.weather[0].icon === "10d" || data.weather[0].icon === "10n") 
+  //   {
+  //     setWicon(rain_icon);
+  //   }
+  //   else if (data.weather[0].icon === "13d" || data.weather[0].icon === "13n") 
+  //   {
+  //     setWicon(snow_icon);
+  //   }
+  //   else 
+  //   {
+  //     setWicon(clear_icon);
+  //   }
+  // }
+  const search = async () => {
     const element = document.getElementsByClassName("cityInput")
-    if(element[0].value==="")
-    {
+    if (element[0].value === "") {
       return 0;
     }
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${element[0].value}&units&appid=${api_key}`;
@@ -29,52 +84,59 @@ const WeatherApp = () => {
     let response = await fetch(url);
     let data = await response.json();
 
-    const humidity = document.getElementsByClassName("humiduty-percentage");
+    const humidity = document.getElementsByClassName("humidity-percent");
     const wind = document.getElementsByClassName("wind-rate");
-    const temprature = document.getElementsByClassName("weather-temp");
+    const temperature = document.getElementsByClassName("weather-temp");
     const location = document.getElementsByClassName("weather-location");
+    const celsiusTemperature = data.main.temp - 273.15;
 
-    humidity[0].innerHTML = data.main.humidity + " %";
-    wind[0].innerHTML = Math.floor(data.wind.speed) + " km/hr";
-    temprature[0].innerHTML = Math.floor(data.main.temp) + "°C";
-    location[0].innerHTML = data.name;
-
-    if (data.weather[0].icon==="01d" || data.weather[0].icon==="01n")
-    {
-      setWicon(clear_icon);
+    if (humidity.length > 0) {
+      humidity[0].innerHTML = data.main.humidity + " %";
     }
-    else if (data.weather[0].icon === "02d" || data.weather[0].icon === "02n")
-    { 
-      setWicon(cloud_icon); 
+    if (wind.length > 0) {
+      wind[0].innerHTML = Math.floor(data.wind.speed) + " km/hr";
     }
-    else if (data.weather[0].icon === "03d" || data.weather[0].icon === "03n") 
-    { 
-      setWicon(drizzle_icon); 
+    if (temperature.length > 0) {
+      temperature[0].innerHTML = Math.floor(celsiusTemperature) + "°C";
     }
-    else if (data.weather[0].icon === "04d" || data.weather[0].icon === "04n") 
-    { 
-      setWicon(drizzle_icon); 
-    }
-    else if (data.weather[0].icon === "09d" || data.weather[0].icon === "09n") 
-    { 
-      setWicon(rain_icon); 
+    if (location.length > 0) {
+      location[0].innerHTML = data.name;
     }
 
-    else if (data.weather[0].icon === "10d" || data.weather[0].icon === "10n") 
-    {
-      setWicon(rain_icon);
-    }
-    else if (data.weather[0].icon === "13d" || data.weather[0].icon === "13n") 
-    {
-      setWicon(snow_icon);
-    }
-    else 
-    {
-      setWicon(clear_icon);
+    // Update weather icon based on the weather condition
+    if (data.weather && data.weather.length > 0) {
+      const weatherIcon = data.weather[0].icon;
+      switch (weatherIcon) {
+        case "01d":
+        case "01n":
+          setWicon(clear_icon);
+          break;
+        case "02d":
+        case "02n":
+          setWicon(cloud_icon);
+          break;
+        case "03d":
+        case "03n":
+        case "04d":
+        case "04n":
+          setWicon(drizzle_icon);
+          break;
+        case "09d":
+        case "09n":
+        case "10d":
+        case "10n":
+          setWicon(rain_icon);
+          break;
+        case "13d":
+        case "13n":
+          setWicon(snow_icon);
+          break;
+        default:
+          setWicon(clear_icon);
+          break;
+      }
     }
   }
-
-
 
 
 
